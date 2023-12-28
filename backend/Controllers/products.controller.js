@@ -1,24 +1,32 @@
 const asynchandler = require("../middleware/asynchandler");
 const Product = require("../models/product.model");
 const ErrorHander = require("../utils/errorHandler");
-
-//create product
-
-exports.createProduct = asynchandler(async (req, res, next) => {
-  const product = await Product.create(req.body);
-  res.status(201).json({  
-    succes: true,
-    product,
-  });
-});
+const Apifeatures = require("../utils/apiFeatures");
 
 //Get product
 
 exports.getAllProducts = asynchandler(async (req, res) => {
-  const allProducts = await Product.find({});
+  let resultPerPage = 5;
+  const productCount = await Product.countDocuments();
+  const apifeature = new Apifeatures(Product.find({}), req.query)
+    .search()
+    .filter()
+    .pagination(resultPerPage);
+  const allProducts = await apifeature.query;
   res.status(200).json({
     succes: true,
     allProducts,
+    productCount,
+  });
+});
+
+//Create product
+
+exports.createProduct = asynchandler(async (req, res, next) => {
+  const product = await Product.create(req.body);
+  res.status(201).json({
+    succes: true,
+    product,
   });
 });
 
