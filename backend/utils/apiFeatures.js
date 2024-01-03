@@ -5,17 +5,17 @@ class Apifeatures {
   }
 
   search() {
-    console.log(this.queryStr);
-    console.log(this.query);
+    // console.log(this.queryStr);
+    // console.log(this.query);
     const keyword = this.queryStr.keyword
       ? {
           name: {
             $regex: new RegExp(this.queryStr.keyword, "i"),
           },
         }
-      : {};
+      : {}
 
-    console.log(keyword);
+    // console.log(keyword);
     this.query = this.query.find({ ...keyword });
     return this;
   }
@@ -23,7 +23,7 @@ class Apifeatures {
   filter() {
     const queryCopy = { ...this.queryStr };
     //remove unwanted field
-    console.log(queryCopy);
+    // console.log(queryCopy);
     const removeField = ["keyword", "page", "limit"];
 
     removeField.forEach((key) => delete queryCopy[key]);
@@ -35,13 +35,13 @@ class Apifeatures {
 
     this.query = this.query.find(JSON.parse(queryStr));
 
-    console.log(queryCopy);
+    // console.log(queryCopy);
     return this;
   }
   //pagination
 
   pagination(resultPerPage) {
-    let currentPage = Number(this.queryStr.page) | 1;
+    let currentPage = Number(this.queryStr.page) || 1;
 
     const skip = resultPerPage * (currentPage - 1);
 
